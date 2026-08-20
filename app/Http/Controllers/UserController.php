@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -19,6 +20,24 @@ public function register(Request $request){
     // echo $_POST['email'];
     // echo 'Form Submitted';
     // echo $request->password;
+
+    $validator = Validator::make($request->all(), [
+        'name' => 'required | min:5 | max:25',
+        'email' => 'required|email|unique:users',
+        'age' => ['required'],
+        'phone_number' => ['required'],
+        'password' => ['required', 'min:8']
+    ]);
+
+    // return $validator->fails();
+    // return $validator->errors();
+
+    if($validator->fails()){
+            return view('registerPage', [
+                    'status' => 'false',
+                    'errors' => $validator->errors()
+            ]);
+    }else{
 
     $register = User::create([
         'name' => $request->name,
@@ -39,7 +58,7 @@ public function register(Request $request){
             'message' => 'User failed to register. Please try again'
         ]);
     }
-
+    }
     }
 
 
