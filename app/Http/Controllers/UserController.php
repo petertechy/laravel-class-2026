@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -48,10 +49,13 @@ public function register(Request $request){
     ]);
 
     if ($register) {
-        return view('registerPage', [
-            'status' => true,
-            'message' => 'User Successfully registered'
-        ]);
+        // return view('registerPage', [
+        //     'status' => true,
+        //     'message' => 'User Successfully registered'
+        // ]);
+
+        // return redirect('/login')->with('message', 'Registration Successful');
+        return redirect()->route('login')->with('message', 'Registration Successful');
     }else {
         return view('registerPage', [
             'status' => false,
@@ -76,28 +80,58 @@ public function login(Request $request){
     
     // return User::all();
 
+    // $validator = Validator::make($request->all(), [
+    //     'email' => 'required|email',
+    //     'password' => ['required']
+    // ]);
 
-    $user = User::where('email', $request->email)->first();
-    // return $user;
-    if($user){
-            $verify = password_verify($request->password, $user->password);
-        if($verify){
-            return view('login', [
-                  'status' => true,
-            'message' => 'Login Successful'
-            ]);
-        }else{
-              return view('login', [
-          'status' => false,
-            'message' => 'The User Credential is wrong'
-            ]);
+    // if($validator->fails()){
+    //         return view('login', [
+    //                 'status' => 'false',
+    //                 'errors' => $validator->errors()
+    //         ]);
+    // }else{
+    //      $user = User::where('email', $request->email)->first();
+    // // return $user;
+    // if($user){
+    //         $verify = password_verify($request->password, $user->password);
+    //     if($verify){
+    //         // return view('login', [
+    //         //       'status' => true,
+    //         // 'message' => 'Login Successful'
+    //         // ]);
+    //         Auth::login($user);
+    //         return redirect('/dashboard');
+    //     }else{
+    //           return view('login', [
+    //       'status' => false,
+    //         'message' => 'The User Credential is wrong'
+    //         ]);
+    //     }
+    // }else{
+    //         return view('login', [
+    //       'status' => false,
+    //         'message' => 'The Provided User Credential does not exist here'
+    //         ]);
+    // }
+    // }
+
+    $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+ 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+ 
+            return redirect()->route('dashboard');
         }
-    }else{
-            return view('login', [
-          'status' => false,
-            'message' => 'The Provided User Credential does not exist here'
-            ]);
-    }
+ 
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->withInput();
+    
+   
 }
 
  public function home(){
@@ -117,5 +151,18 @@ public function login(Request $request){
     // ]);
 
     return view('home', ['myFruits' => $fruit]);
+}
+
+
+ public function dashboard(){
+    // return view('dashboard');
+
+    $user = Auth::user();
+    return view('dashboard', ['user' => $user]);
+}
+
+public function logout(){
+    Auth::logout();
+    return redirect('/login');
 }
 }

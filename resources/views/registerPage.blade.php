@@ -44,7 +44,7 @@
                     <span class="text-danger text-sm">{{$errors->first('phone_number')}}</span>
                     @endif
                 </div>
-                <input class="form-control mb-3" type="text" placeholder="password" name="password">
+                <input class="form-control mb-3" type="password" placeholder="password" name="password">
                 <div class="mb-3">
                     @if ($errors->first('password'))     
                     <span class="text-danger text-sm">{{$errors->first('password')}}</span>

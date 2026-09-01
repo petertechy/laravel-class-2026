@@ -15,13 +15,27 @@
             <div class="mx-auto alert {{$status ? 'alert-success' : 'alert-danger'}}">{{$message}}</div>
                 
             @endif
+
+            @if (session('message'))
+                 <div class='alert alert-success'>{{session('message')}}</div>
+            @endif
         </div>
         <form action="/login" method="post">
             @csrf
             <div class="col-7 mx-auto border shadow p-3 my-4">
                 <h4 class="text-center text-success">Login Page</h4>
-                <input class="form-control mb-3" type="text" placeholder="email" name="email">
-                <input class="form-control mb-3" type="text" placeholder="password" name="password">
+                <input class="form-control mb-3" type="text" placeholder="email" name="email" value="{{old('email')}}">
+                <div class="mb-3">
+                    @if ($errors->first('email'))     
+                    <span class="text-danger text-sm">{{$errors->first('email')}}</span>
+                    @endif
+                </div>
+                <input class="form-control mb-3" type="password" placeholder="password" name="password" value="{{old('password')}}">
+                <div class="mb-3">
+                    @if ($errors->first('password'))     
+                    <span class="text-danger text-sm">{{$errors->first('password')}}</span>
+                    @endif
+                </div>
                 <button class="btn btn-success w-100">Login</button>
             </div>
         </form>
