@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateUser;
 use Illuminate\Http\Request;
@@ -20,3 +21,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard')->middleware(AuthenticateUser::class);
 
 Route::post('logout', [UserController::class, 'logout']);
+
+Route::get('/product', [ProductController::class, 'index'])->name('product');
+
+Route::post('/create', [ProductController::class, 'create']);
