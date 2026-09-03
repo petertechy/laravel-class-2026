@@ -19,7 +19,9 @@ class ProductController extends Controller
         'title' => 'required | min:1 | max:25',
         'description' => 'required|max:255',
         'price' => ['required'],
-        'quantity' => ['required']
+        'quantity' => ['required'],
+        'image' =>
+'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
     ]);
 
     // return $validator->fails();
@@ -32,11 +34,20 @@ class ProductController extends Controller
             ]);
     }else{
 
+    $imagePath = null;
+if ($request->hasFile('image')) {
+// stores in storage/app/public/products and returns
+"products/filename.jpg";
+$imagePath = $request->file('image')->store('products',
+'public');
+}
+
     $product = Product::create([
         'title' => $request->title,
         'description' => $request->description,
         'price' => $request->price,
         'quantity' => $request->quantity,
+        'image' => $imagePath
     ]);
 
     if ($product) {

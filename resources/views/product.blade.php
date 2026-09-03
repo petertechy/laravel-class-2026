@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
     @if (@isset($message))
@@ -12,35 +13,48 @@
             <div class="mx-auto alert {{$status ? 'alert-success' : 'alert-danger'}}">{{$message}}</div>
                 
             @endif
-    <form action="/create" method="post">
+
+             @if (session('message'))
+                 <div class='alert alert-success'>{{session('message')}}</div>
+            @endif
+    <form action="/create" method="post" enctype="multipart/form-data">
         @csrf
-        <h1>Product Creation</h1>
-        <input type="text" placeholder="product title" name="title">
+        <div class="col-7 mx-auto border shadow p-3 my-4">
+            <h1>Product Creation</h1>
+        <input class="form-control mb-3" type="text" placeholder="product title" name="title">
         <div class="mb-3">
                     @if ($errors->first('title'))     
                     <span class="text-danger text-sm">{{$errors->first('title')}}</span>
                     @endif
                 </div>
-        <input type="text" placeholder="product description" name="description">
+        <input class="form-control mb-3" type="text" placeholder="product description" name="description">
         <div class="mb-3">
                     @if ($errors->first('description'))     
                     <span class="text-danger text-sm">{{$errors->first('description')}}</span>
                     @endif
                 </div>
-        <input type="number" placeholder="product price" name="price">
+        <input class="form-control mb-3" type="number" placeholder="product price" name="price">
         <div class="mb-3">
                     @if ($errors->first('price'))     
                     <span class="text-danger text-sm">{{$errors->first('price')}}</span>
                     @endif
                 </div>
-        <input type="number" placeholder="product quantity" name="quantity">
+        <input class="form-control mb-3" type="number" placeholder="product quantity" name="quantity">
         <div class="mb-3">
                     @if ($errors->first('quantity'))     
                     <span class="text-danger text-sm">{{$errors->first('quantity')}}</span>
                     @endif
                 </div>
 
-        <button>Add Product</button>
+        <input type="file" name="image" class="form-control mb-3" accept="image/*">
+        <div class="mb-3">
+                    @if ($errors->first('image'))     
+                    <span class="text-danger text-sm">{{$errors->first('image')}}</span>
+                    @endif
+                </div>
+
+        <button class="btn btn-success w-100">Add Product</button>
+        </div>
     </form>
 </body>
 </html>
