@@ -157,12 +157,39 @@ public function login(Request $request){
  public function dashboard(){
     // return view('dashboard');
 
-    $user = Auth::user();
-    return view('dashboard', ['user' => $user]);
+    $user = Auth::user(); //currently logged in user
+   $users = User::latest()->paginate(10); // all users, newest first, paged
+return view('dashboard', [
+'user' => $user,
+'users' => $users,
+]);
 }
 
 public function logout(){
     Auth::logout();
     return redirect('/login');
+}
+
+public function destroy(User $user){
+ $user->delete();
+ return redirect()->route('dashboard')->with('message', 'User deleted');
+}
+
+public function edit(User $user){
+    return view('editUser', ['user' => $user]);
+}
+
+public function update(Request $request, User $user){
+    $validator = Validator::make($request->all(), [
+    'name' => 'required|min:5|max:25',
+    'email' => 'required|email|unique:users,email,' . $user->id, // ignore own row
+    'age' => 'required',
+    'phone_number' => 'required',
+]);
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
+}
+    $user->update($request->only(['name', 'email', 'age', 'phone_number']));
+    return redirect()->route('dashboard')->with('message', 'User updated');
 }
 }

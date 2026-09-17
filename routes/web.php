@@ -25,3 +25,9 @@ Route::post('logout', [UserController::class, 'logout']);
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 
 Route::post('/create', [ProductController::class, 'create']);
+
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware(AuthenticateUser::class);
+
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])->middleware(AuthenticateUser::class);
+
+Route::put('/users/{user}', [UserController::class, 'update'])->middleware(AuthenticateUser::class);

@@ -56,5 +56,36 @@
         <button class="btn btn-success w-100">Add Product</button>
         </div>
     </form>
+
+    <div class="col-7 mx-auto my-4">
+        <h2>Products</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-3">
+            @forelse ($products as $product)
+        <div class="col">
+        <div class="card h-100">
+            @if ($product->image)
+            <img src="{{ asset('storage/' . $product->image) }}"
+                    class="card-img-top" alt="{{ $product->title }}"
+                    style="height: 180px; object-fit: cover;">
+            @else
+        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+            <span class="text-muted">No image</span>
+        </div>
+            @endif
+        <div class="card-body">
+            <h5 class="card-title">{{ $product->title }}</h5>
+            <p class="card-text">{{ $product->description }}</p>
+            <p class="card-text">
+                <strong>₦{{ number_format($product->price) }}</strong>
+                &middot; {{ $product->quantity }} in stock
+            </p>
+        </div>
+        </div>
+</div>
+        @empty
+        <p class="text-muted">No products yet — add one above.</p>
+        @endforelse
+</div>
+</div>
 </body>
 </html>

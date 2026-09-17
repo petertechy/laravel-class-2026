@@ -10,8 +10,9 @@ class ProductController extends Controller
 {
     //
     public function index(){
-        return view('product');
-    }
+    $products = Product::latest()->get();
+    return view('product', ['products' => $products]);
+}
 
     public function create(Request $request){
 
