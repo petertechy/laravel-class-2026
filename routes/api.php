@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateUser;
 
@@ -28,7 +28,13 @@ Route::post('logout', [UserController::class, 'logout']);
 
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 
+Route::get('/products/{product}', [ProductController::class, 'show']);
+
 Route::post('/create', [ProductController::class, 'create']);
+
+Route::put('/products/{product}', [ProductController::class, 'update']);
+
+Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware(AuthenticateUser::class);
 
